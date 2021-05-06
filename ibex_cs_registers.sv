@@ -113,7 +113,7 @@ module ibex_cs_registers #(
 );
   import ibex_pkg::*;
   
-
+  localparam int unsigned RV32BEnabled = (RV32B == RV32BNone) ? 0 : 1;
   localparam int unsigned RV32MEnabled = (RV32M == RV32MNone) ? 0 : 1;
   localparam int unsigned PMPAddrWidth = (PMPGranularity > 0) ? 33 - PMPGranularity : 32;
 
@@ -282,8 +282,7 @@ module ibex_cs_registers #(
   // See RISC-V Privileged Specification, version 1.11, Section 2.1
   assign illegal_csr_priv    = (csr_addr[9:8] > {priv_lvl_q});
   assign illegal_csr_write   = (csr_addr[11:10] == 2'b11) && csr_wreq;
-  assign illegal_csr_insn_o  = csr_access_i & (illegal_csr | illegal_csr_write | illegal_csr_priv
-                               | illegal_csr_dyn_mod);
+  assign illegal_csr_insn_o  = csr_access_i & (illegal_csr | illegal_csr_write | illegal_csr_priv);
 
   // mip CSR is purely combinational - must be able to re-enable the clock upon WFI
   assign mip.irq_software = irq_software_i;

@@ -596,7 +596,7 @@ module ibex_id_stage #(
 
       // Performance Counters
       .perf_jump_o                    ( perf_jump_o             ),
-      .perf_tbranch_o                 ( perf_tbranch_o          ),
+      .perf_tbranch_o                 ( perf_tbranch_o          )
       //.fpu_busy_i                     ( fpu_busy_i              )
   );
 

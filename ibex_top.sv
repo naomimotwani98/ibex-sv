@@ -237,35 +237,35 @@ module ibex_top #(
     .data_rdata_i,
     .data_err_i,
 
-    .dummy_instr_id_o  (dummy_instr_id),
-    .rf_raddr_a_o      (rf_raddr_a),
-    .rf_raddr_b_o      (rf_raddr_b),
-    .rf_waddr_wb_o     (rf_waddr_wb),
-    .rf_we_wb_o        (rf_we_wb),
-    .rf_wdata_wb_ecc_o (rf_wdata_wb_ecc),
-    .rf_rdata_a_ecc_i  (rf_rdata_a_ecc),
-    .rf_rdata_b_ecc_i  (rf_rdata_b_ecc),
+    // .dummy_instr_id_o  (dummy_instr_id),
+    // .rf_raddr_a_o      (rf_raddr_a),
+    // .rf_raddr_b_o      (rf_raddr_b),
+    // .rf_waddr_wb_o     (rf_waddr_wb),
+    // .rf_we_wb_o        (rf_we_wb),
+    // .rf_wdata_wb_ecc_o (rf_wdata_wb_ecc),
+    // .rf_rdata_a_ecc_i  (rf_rdata_a_ecc),
+    // .rf_rdata_b_ecc_i  (rf_rdata_b_ecc),
 
-    .ic_tag_req_o      (ic_tag_req),
-    .ic_tag_write_o    (ic_tag_write),
-    .ic_tag_addr_o     (ic_tag_addr),
-    .ic_tag_wdata_o    (ic_tag_wdata),
-    .ic_tag_rdata_i    (ic_tag_rdata),
-    .ic_data_req_o     (ic_data_req),
-    .ic_data_write_o   (ic_data_write),
-    .ic_data_addr_o    (ic_data_addr),
-    .ic_data_wdata_o   (ic_data_wdata),
-    .ic_data_rdata_i   (ic_data_rdata),
+    // .ic_tag_req_o      (ic_tag_req),
+    // .ic_tag_write_o    (ic_tag_write),
+    // .ic_tag_addr_o     (ic_tag_addr),
+    // .ic_tag_wdata_o    (ic_tag_wdata),
+    // .ic_tag_rdata_i    (ic_tag_rdata),
+    // .ic_data_req_o     (ic_data_req),
+    // .ic_data_write_o   (ic_data_write),
+    // .ic_data_addr_o    (ic_data_addr),
+    // .ic_data_wdata_o   (ic_data_wdata),
+    // .ic_data_rdata_i   (ic_data_rdata),
 
     .irq_software_i,
     .irq_timer_i,
     .irq_external_i,
     .irq_fast_i,
     .irq_nm_i,
-    .irq_pending_o (irq_pending),
+    // .irq_pending_o (irq_pending),
 
     .debug_req_i,
-    .crash_dump_o,
+    //.crash_dump_o,
 
 `ifdef RVFI
     .rvfi_valid,
@@ -294,8 +294,8 @@ module ibex_top #(
 `endif
 
     .alert_minor_o (core_alert_minor),
-    .alert_major_o (core_alert_major),
-    .core_busy_o (core_busy_d)
+    .alert_major_o (core_alert_major)
+    // .core_busy_o (core_busy_d)
   );
 
   /////////////////////////////////

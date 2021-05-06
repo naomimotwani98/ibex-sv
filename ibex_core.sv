@@ -2,6 +2,7 @@
   `define RVFI
 `endif
 
+import ibex_pkg::*;
 
 /**
  * Top level module of the brq RISC-V core
@@ -16,7 +17,7 @@ module ibex_core #(
     parameter ibex_pkg::rv32m_e    RV32M            = ibex_pkg::RV32MFast,
     parameter ibex_pkg::rv32b_e    RV32B            = ibex_pkg::RV32BNone,
     parameter ibex_pkg::regfile_e  RegFile          = ibex_pkg::RegFileFF,
-    parameter ibex_pkg::rvfloat_e  RVF              = ibex_pkg::RV32FSingle, // for floating point
+    //parameter ibex_pkg::rvfloat_e  RVF              = ibex_pkg::RV32FSingle, // for floating point
     parameter int unsigned        FloatingPoint    = 1'b1,
     parameter bit                 BranchTargetALU  = 1'b0,
     parameter bit                 WritebackStage   = 1'b1,
@@ -27,7 +28,9 @@ module ibex_core #(
     parameter int unsigned        DbgHwBreakNum    = 1,
     parameter bit                 Securebrq        = 1'b0,
     parameter int unsigned        DmHaltAddr       = 32'h1A110800,
-    parameter int unsigned        DmExceptionAddr  = 32'h1A110808
+    parameter int unsigned        DmExceptionAddr  = 32'h1A110808,
+
+    parameter bit                 SecureIbex = 1'b0
 ) (
     // Clock and Reset
     input  logic        clk_i,
@@ -357,7 +360,7 @@ module ibex_core #(
 
   // Before going to sleep, wait for I- and D-side
   // interfaces to finish ongoing operations.
-  assign core_busy_d = ctrl_busy | if_busy | lsu_busy | fp_busy;
+  assign core_busy_d = ctrl_busy | if_busy | lsu_busy;
 
   always_ff @(posedge clk_i or negedge rst_ni) begin
     if (!rst_ni) begin
@@ -832,10 +835,10 @@ module ibex_core #(
   end
 
   
-  assign crash_dump_o.current_pc     = pc_id;
-  assign crash_dump_o.next_pc        = pc_if;
-  assign crash_dump_o.last_data_addr = lsu_addr_last;
-  assign crash_dump_o.exception_addr = csr_mepc;
+  // assign crash_dump_o.current_pc     = pc_id;
+  // assign crash_dump_o.next_pc        = pc_if;
+  // assign crash_dump_o.last_data_addr = lsu_addr_last;
+  // assign crash_dump_o.exception_addr = csr_mepc;
   ///////////////////
   // Alert outputs //
   ///////////////////

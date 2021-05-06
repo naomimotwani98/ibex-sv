@@ -1125,8 +1125,6 @@ module ibex_decoder #(
         end
       end
      
-  
-      end
       default: ;
     endcase
   end

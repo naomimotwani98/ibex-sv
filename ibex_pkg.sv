@@ -8,6 +8,25 @@
  */
 package ibex_pkg;
 
+////////////////
+// IO Structs //
+////////////////
+
+typedef struct packed {
+  logic [31:0] current_pc;
+  logic [31:0] next_pc;
+  logic [31:0] last_data_addr;
+  logic [31:0] exception_addr;
+} crash_dump_t;
+
+typedef struct packed {
+  logic        dummy_instr_id;
+  logic [4:0]  raddr_a;
+  logic [4:0]  waddr_a;
+  logic        we_a;
+  logic [4:0]  raddr_b;
+} core2rf_t;
+
 /////////////////////
 // Parameter Enums //
 /////////////////////
@@ -300,6 +319,24 @@ typedef enum logic [2:0] {
   DBG_CAUSE_STEP    = 3'h4
 } dbg_cause_e;
 
+// ICache constants
+parameter int unsigned ADDR_W          = 32;
+parameter int unsigned BUS_SIZE        = 32;
+parameter int unsigned BUS_BYTES       = BUS_SIZE/8;
+parameter int unsigned BUS_W           = $clog2(BUS_BYTES);
+parameter int unsigned IC_SIZE_BYTES   = 4096;
+parameter int unsigned IC_NUM_WAYS     = 2;
+parameter int unsigned IC_LINE_SIZE    = 64;
+parameter int unsigned IC_LINE_BYTES   = IC_LINE_SIZE/8;
+parameter int unsigned IC_LINE_W       = $clog2(IC_LINE_BYTES);
+parameter int unsigned IC_NUM_LINES    = IC_SIZE_BYTES / IC_NUM_WAYS / IC_LINE_BYTES;
+parameter int unsigned IC_LINE_BEATS   = IC_LINE_BYTES / BUS_BYTES;
+parameter int unsigned IC_LINE_BEATS_W = $clog2(IC_LINE_BEATS);
+parameter int unsigned IC_INDEX_W      = $clog2(IC_NUM_LINES);
+parameter int unsigned IC_INDEX_HI     = IC_INDEX_W + IC_LINE_W - 1;
+parameter int unsigned IC_TAG_SIZE     = ADDR_W - IC_INDEX_W - IC_LINE_W + 1; // 1 valid bit
+parameter int unsigned IC_OUTPUT_BEATS = (BUS_BYTES / 2); // number of halfwords
+
 // PMP constants
 parameter int unsigned PMP_MAX_REGIONS      = 16;
 parameter int unsigned PMP_CFG_W            = 8;
@@ -330,6 +367,13 @@ typedef struct packed {
   logic          read;
 } pmp_cfg_t;
 
+// Machine Security Configuration (ePMP)
+typedef struct packed {
+  logic rlb;  // Rule Locking Bypass
+  logic mmwp; // Machine Mode Whitelist Policy
+  logic mml;  // Machine Mode Lockdown
+} pmp_mseccfg_t;
+
 // CSRs
 typedef enum logic[11:0] {
   // Machine information
@@ -340,6 +384,7 @@ typedef enum logic[11:0] {
   CSR_MISA      = 12'h301,
   CSR_MIE       = 12'h304,
   CSR_MTVEC     = 12'h305,
+  CSR_MCOUNTEREN= 12'h306,
 
   // Machine trap handling
   CSR_MSCRATCH  = 12'h340,
@@ -347,6 +392,9 @@ typedef enum logic[11:0] {
   CSR_MCAUSE    = 12'h342,
   CSR_MTVAL     = 12'h343,
   CSR_MIP       = 12'h344,
+
+  CSR_MSECCFG   = 12'h390,
+  CSR_MSECCFGH  = 12'h391,
 
   // Physical memory protection
   CSR_PMPCFG0   = 12'h3A0,
@@ -504,5 +552,10 @@ parameter int unsigned CSR_MTIX_BIT      = 7;
 parameter int unsigned CSR_MEIX_BIT      = 11;
 parameter int unsigned CSR_MFIX_BIT_LOW  = 16;
 parameter int unsigned CSR_MFIX_BIT_HIGH = 30;
+
+// CSR Machine Security Configuration bits
+parameter int unsigned CSR_MSECCFG_MML_BIT  = 0;
+parameter int unsigned CSR_MSECCFG_MMWP_BIT = 1;
+parameter int unsigned CSR_MSECCFG_RLB_BIT  = 2;
 
 endpackage

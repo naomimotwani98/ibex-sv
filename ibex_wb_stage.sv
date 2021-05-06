@@ -167,7 +167,7 @@ module ibex_wb_stage #(
 
   // RF write data can come from ID results (all RF writes that aren't because of loads will come
   // from here) or the LSU (RF writes for load data)
-assign rf_wdata_wb_o  = (rf_wdata_wb_mux_we[0] | we_temp) ? rf_wdata_wb_mux[0] : 
+assign rf_wdata_wb_o  = (rf_wdata_wb_mux_we[0]) ? rf_wdata_wb_mux[0] : 
                           rf_wdata_wb_mux[1];
   assign rf_we_wb_o    = |rf_wdata_wb_mux_we;
 
